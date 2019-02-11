@@ -1,0 +1,40 @@
+version: '3'
+
+services:
+  todo-db-host:
+    image: mariadb:10.1.35
+    container_name: todo-app-db
+    environment:
+      MYSQL_ROOT_PASSWORD: ${MYSQL_ROOT_PASSWORD}
+      MYSQL_DATABASE: ${MYSQL_DATABASE}
+      MYSQL_USER: ${MYSQL_USER}
+      MYSQL_PASSWORD: ${MYSQL_PASSWORD}
+    ports:
+    - "3310:3306/tcp"
+
+  todo-app:
+    container_name: todo-app
+    build:
+      context: docker/php7-fpm
+      args:
+        TIMEZONE: ${TIMEZONE}
+    volumes:
+    - .:/var/www/todo
+    environment:
+    - APP_DEBUG=1
+    - PHP_IDE_CONFIG=docker.for.mac.localhost
+    env_file:
+    - .env
+
+  todo-webserver:
+    build: docker/nginx
+    container_name: todo-webserver
+    environment:
+    - COMPOSE_HTTP_TIMEOUT=120
+    ports:
+    - "81:80/tcp"
+    volumes:
+    - ./var/log/nginx/:/var/log/nginx
+    - .:/var/www/todo
+    expose:
+    - 80

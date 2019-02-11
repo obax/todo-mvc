@@ -1,0 +1,114 @@
+openapi: "2.0.0"
+info:
+  title: Orlo Interview Todo App
+  description: The open api schema for the adjoining API
+  version: "1.0.0"
+basePath: /v1
+produces:
+- application/json
+paths:
+  /lists:
+    get:
+      summary: Gets all the lists
+      description: Returns an array of all the item lists currently in the database
+      security: []
+      tags:
+      - Lists
+      responses:
+        "200":
+          description: An array of products
+          schema:
+            type: array
+            items:
+              $ref: '#/definitions/TodoItem'
+        default:
+          description: Unexpected error
+          schema:
+            $ref: '#/definitions/Error'
+    post:
+      summary: Creates a new list
+      security: []
+      responses:
+        "200":
+          description: Succesfully executed
+
+  /items:
+    get:
+      summary: Price Estimates
+      description: The Price Estimates endpoint returns an estimated price range for each product offered at a given location. The price estimate is provided as a formatted string with the full price range and the localized currency symbol.<br><br>The response also includes low and high estimates, and the [ISO 4217](http://en.wikipedia.org/wiki/ISO_4217) currency code for situations requiring currency conversion. When surge is active for a particular product, its surge_multiplier will be greater than 1, but the price estimate already factors in this multiplier.
+      parameters:
+      - name: filter
+        in: query
+        description: Latitude component of start location.
+        required: false
+        type: string
+        enum: ['overdue', 'completed', 'list']
+      tags:
+      - Tasks
+      responses:
+        "200":
+          description: An array of price estimates by product
+          schema:
+            type: array
+            items:
+              $ref: '#/definitions/TodoList'
+        default:
+          description: Unexpected error
+          schema:
+            $ref: '#/definitions/Error'
+definitions:
+  TodoItem:
+    properties:
+      id:
+        type: integer
+        description: Unique identifier representing a specific task
+      description:
+        type: string
+        description: Description of the task.
+      name:
+        type: string
+        description: Display name of the task.
+      due_date:
+        type: date
+        description: Date the task will be due
+      created_on:
+        type: date
+        description: Date of creaton of the task
+      completed:
+        type: string
+        enum: ['yes', 'no']
+        description: Status of completion
+
+  TodoList:
+    properties:
+      id:
+        type: integer
+        description: Unique identifier representing a specific task list
+      name:
+        type: string
+
+  TodoItemCollection:
+    properties:
+      collection:
+        description: Contains the list of items
+        type: array
+        items:
+          $ref: "#/definitions/TodoItem"
+
+  Error:
+    properties:
+      message:
+        type: string
+      fields:
+        type: string
+
+  Success:
+    properties:
+      metadata:
+        type: object
+        properties:
+          last_update:
+          type: date
+      data:
+        metadata:
+          type: object

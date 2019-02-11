@@ -1,0 +1,17 @@
+{
+    "name": "acme/todo-api",
+    "type": "project",
+    "require": {
+        "slim/slim": "^3.10",
+        "doctrine/orm": "^2",
+        "doctrine/migrations": "^2.0",
+        "symfony/yaml": "^4.2",
+        "akrabat/rka-content-type-renderer": "^0.8.0"
+    },
+    "autoload": {
+        "psr-4": {
+            "TodoApi\\": "./src",
+            "TodoApi\\Repository\\": "./src/Repository"
+        }
+    }
+}
